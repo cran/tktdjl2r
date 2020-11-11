@@ -1,0 +1,175 @@
+---
+title: "Tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tutorial}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Starting
+
+The package `tktdjl2r` is a companion package to use from `R` the package `TKTDsimulations.jl` written in `julia`.
+
+`TKTDsimulations.jl` is dedicated to the simulation of a large set of TKTD models using efficient differential equations solvers
+implemented in `julia`.
+
+You need to have `julia` installed in your computer:[see here for information about julia installation](https://julialang.org/downloads/)
+
+If `Julia` is on your machine, then install and load `tktdjl2r` library:
+
+```{r setup, eval=FALSE}
+library(tktdjl2r)
+```
+
+In order to make the link from `julia` to `R`, you have to run the setup command:
+
+```{r setup_tktdjl2r, eval=FALSE}
+# Julia can be quite long to install the first time.
+tktdjl2r::tktdjl2r_setup()
+```
+
+This command is going to call the `JuliaCall` R package and check or install required dependencies.
+
+In the console, you should have (for instance on windows):
+
+```
+Julia version 1.5.0 at location C:\Users\...\AppData\Local\Programs\JULIA1~1.0\bin will be used.
+Loading setup script for JuliaCall...
+Finish loading setup script for JuliaCall.
+```
+
+# Toxicokinetics
+
+The first time this code is run can be long. But after the first run, the run should be highly faster.
+
+```{r runTK, eval=FALSE}
+single_runTK = runTK(c(0,1,2,3), c(0,1,2,2), 0.5)
+```
+
+
+```{r runTK_MCMC, eval=FALSE}
+kdVector = rbeta(4,10,10)
+mcmc_runTK = lapply(1:length(kdVector),
+                    function(i){
+                      runTK(c(0,1,2,3), c(0,1,2,2),kdVector[i])
+                    })
+```
+
+
+## TKTD, Stochastic Death type SD
+
+```{r runSD, eval=FALSE}
+single_runSD = runSD(c(0,1,2,3), c(0,1,2,2), 0.5, 0.2, 1, 0.4)
+```
+
+
+```{r runSD_MCMC, eval=FALSE}
+paramDF = data.frame(
+  kd = rbeta(4,10,10),
+  hb = rbeta(4,10,10),
+  z = rbeta(4,10,10),
+  kk = rbeta(4,10,10))
+mcmc_runSD = lapply(1:nrow(paramDF),
+                    function(i){
+                      runSD(c(0,1,2,3), c(0,1,2,2),
+                            paramDF$kd[i],
+                            paramDF$hb[i],
+                            paramDF$z[i],
+                            paramDF$kk[i])
+                    })
+```
+
+## TKTD, Individual Tolerance type IT
+
+```{r runIT, eval=FALSE}
+single_runIT = runIT(c(0,1,2,3), c(0,1,2,2),0.5, 0.2, 1, 0.4)
+```
+
+```{r runIT_MCMC, eval=FALSE}
+paramDF = data.frame(
+  kd = rbeta(4,10,10),
+  hb = rbeta(4,10,10),
+  alpha = rbeta(4,10,10),
+  beta = rbeta(4,10,10))
+mcmc_runIT = lapply(1:nrow(paramDF),
+                    function(i){
+                      runIT(c(0,1,2,3), c(0,1,2,2),
+                            paramDF$kd[i],
+                            paramDF$hb[i],
+                            paramDF$alpha[i],
+                            paramDF$beta[i])
+                    })
+```
+
+# Comparison with pacakge 'deSolve'
+
+## Test for toxicokinetics, TK
+
+```{r deSolveTK, eval=FALSE}
+library(deSolve)
+
+model_TK <- function(t, State, parms, input) {
+  with(as.list(c(parms, State)), {
+    list(kd*(input(t) - State))    # internal damage
+  })
+}
+
+deSolve_TK <- function(time, conc, listParameters){
+  signal <- data.frame(times = time,
+                       import = conc)
+
+  sigimp <- stats::approxfun(signal$times,
+                             signal$import,
+                             method = "linear",
+                             rule = 2)
+
+  ## values for steady state
+  xstart <- c(D = 0)
+  ## model
+  out <- ode(y = xstart,
+             times = time,
+             func = model_TK,
+             parms = listParameters,
+             input = sigimp)
+
+  data.frame(
+    time = time,
+    exposure = conc,
+    TK = out[,2]
+  )
+
+}
+```
+
+### Plot both
+
+```{r plotTK, eval=FALSE}
+listParameters = list(kd = 0.5)
+testR_runTK = deSolve_TK(c(0,1,2,3), c(0,1,2,2), list(kd=0.5))
+plot(single_runTK$time, single_runTK$TK, type = "l", lwd = 3)
+lines(testR_runTK$time, testR_runTK$TK, col = "red", lwd = 2)
+```
+
+### Test speed
+
+```{r speedTK, eval=FALSE}
+library(microbenchmark)
+
+microbenchmark::microbenchmark(
+  testJulia_runTK = runTK(c(0,1,2,3), c(0,1,2,2), 0.5),
+  testR_runTK = deSolve_TK(c(0,1,2,3), c(0,1,2,2), list(kd=0.5)),
+  times = 10
+)
+```
+
+
