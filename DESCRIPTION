@@ -1,6 +1,6 @@
 Package: tktdjl2r
 Title: Interface for the 'Julia' 'TKTD' Simulator 'TKTDsimulations.jl'
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person(given = "Virgile",
            family = "Baudrot",
@@ -18,9 +18,10 @@ RoxygenNote: 7.1.1
 Imports: JuliaCall, stringr
 Suggests: testthat, knitr, rmarkdown, microbenchmark, deSolve
 VignetteBuilder: knitr
+Depends: R (>= 3.5.0)
 NeedsCompilation: no
-Packaged: 2020-11-06 14:58:24 UTC; virgi
+Packaged: 2020-12-17 13:14:29 UTC; virgi
 Author: Virgile Baudrot [aut, cre] (<https://orcid.org/0000-0003-1327-9728>)
 Maintainer: Virgile Baudrot <virgile.baudrot@posteo.net>
 Repository: CRAN
-Date/Publication: 2020-11-11 13:30:02 UTC
+Date/Publication: 2020-12-17 14:40:02 UTC

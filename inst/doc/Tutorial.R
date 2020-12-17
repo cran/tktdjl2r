@@ -16,10 +16,8 @@ knitr::opts_chunk$set(
 
 ## ----runTK_MCMC, eval=FALSE---------------------------------------------------
 #  kdVector = rbeta(4,10,10)
-#  mcmc_runTK = lapply(1:length(kdVector),
-#                      function(i){
-#                        runTK(c(0,1,2,3), c(0,1,2,2),kdVector[i])
-#                      })
+#  
+#  mcmc_runTK = runTK_MCMC(c(0,1,2,3), c(0,1,2,2), kdVector)
 
 ## ----runSD, eval=FALSE--------------------------------------------------------
 #  single_runSD = runSD(c(0,1,2,3), c(0,1,2,2), 0.5, 0.2, 1, 0.4)
@@ -30,14 +28,7 @@ knitr::opts_chunk$set(
 #    hb = rbeta(4,10,10),
 #    z = rbeta(4,10,10),
 #    kk = rbeta(4,10,10))
-#  mcmc_runSD = lapply(1:nrow(paramDF),
-#                      function(i){
-#                        runSD(c(0,1,2,3), c(0,1,2,2),
-#                              paramDF$kd[i],
-#                              paramDF$hb[i],
-#                              paramDF$z[i],
-#                              paramDF$kk[i])
-#                      })
+#  mcmc_runSD = runSD_MCMC(c(0,1,2,3), c(0,1,2,2), paramDF$kd, paramDF$hb, paramDF$z, paramDF$kk)
 
 ## ----runIT, eval=FALSE--------------------------------------------------------
 #  single_runIT = runIT(c(0,1,2,3), c(0,1,2,2),0.5, 0.2, 1, 0.4)
@@ -48,14 +39,7 @@ knitr::opts_chunk$set(
 #    hb = rbeta(4,10,10),
 #    alpha = rbeta(4,10,10),
 #    beta = rbeta(4,10,10))
-#  mcmc_runIT = lapply(1:nrow(paramDF),
-#                      function(i){
-#                        runIT(c(0,1,2,3), c(0,1,2,2),
-#                              paramDF$kd[i],
-#                              paramDF$hb[i],
-#                              paramDF$alpha[i],
-#                              paramDF$beta[i])
-#                      })
+#  mcmc_runIT = runIT_MCMC(c(0,1,2,3), c(0,1,2,2), paramDF$kd, paramDF$hb, paramDF$alpha, paramDF$beta)
 
 ## ----deSolveTK, eval=FALSE----------------------------------------------------
 #  library(deSolve)
@@ -95,8 +79,8 @@ knitr::opts_chunk$set(
 ## ----plotTK, eval=FALSE-------------------------------------------------------
 #  listParameters = list(kd = 0.5)
 #  testR_runTK = deSolve_TK(c(0,1,2,3), c(0,1,2,2), list(kd=0.5))
-#  plot(single_runTK$time, single_runTK$TK, type = "l", lwd = 3)
-#  lines(testR_runTK$time, testR_runTK$TK, col = "red", lwd = 2)
+#  plot(c(0,1,2,3), single_runTK$TK, type = "l", lwd = 3)
+#  lines(c(0,1,2,3), testR_runTK$TK, col = "red", lwd = 2)
 
 ## ----speedTK, eval=FALSE------------------------------------------------------
 #  library(microbenchmark)

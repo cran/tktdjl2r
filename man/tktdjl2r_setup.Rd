@@ -4,10 +4,12 @@
 \alias{tktdjl2r_setup}
 \title{Setup tktdjl2}
 \usage{
-tktdjl2r_setup(...)
+tktdjl2r_setup(..., update = FALSE)
 }
 \arguments{
 \item{...}{Parameters are passed down to JuliaCall::julia_setup}
+
+\item{update}{if \code{TRUE} update the  TKTDsimulations.jl pacakge. Default is \code{FALSE}}
 }
 \description{
 This function initializes Julia and the TKTDsimulation.jl package.

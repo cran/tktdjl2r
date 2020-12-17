@@ -336,10 +336,8 @@ Finish loading setup script for JuliaCall.</code></pre>
 <p>The first time this code is run can be long. But after the first run, the run should be highly faster.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>single_runTK =<span class="st"> </span><span class="kw">runTK</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), <span class="fl">0.5</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>kdVector =<span class="st"> </span><span class="kw">rbeta</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">10</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>mcmc_runTK =<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(kdVector),</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>                    <span class="cf">function</span>(i){</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>                      <span class="kw">runTK</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),kdVector[i])</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>                    })</span></code></pre></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>mcmc_runTK =<span class="st"> </span><span class="kw">runTK_MCMC</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), kdVector)</span></code></pre></div>
 <div id="tktd-stochastic-death-type-sd" class="section level2">
 <h2>TKTD, Stochastic Death type SD</h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>single_runSD =<span class="st"> </span><span class="kw">runSD</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="dv">1</span>, <span class="fl">0.4</span>)</span></code></pre></div>
@@ -348,14 +346,7 @@ Finish loading setup script for JuliaCall.</code></pre>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>  <span class="dt">hb =</span> <span class="kw">rbeta</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">10</span>),</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>  <span class="dt">z =</span> <span class="kw">rbeta</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">10</span>),</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>  <span class="dt">kk =</span> <span class="kw">rbeta</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">10</span>))</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>mcmc_runSD =<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(paramDF),</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>                    <span class="cf">function</span>(i){</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a>                      <span class="kw">runSD</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a>                            paramDF<span class="op">$</span>kd[i],</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a>                            paramDF<span class="op">$</span>hb[i],</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a>                            paramDF<span class="op">$</span>z[i],</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true"></a>                            paramDF<span class="op">$</span>kk[i])</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true"></a>                    })</span></code></pre></div>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>mcmc_runSD =<span class="st"> </span><span class="kw">runSD_MCMC</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), paramDF<span class="op">$</span>kd, paramDF<span class="op">$</span>hb, paramDF<span class="op">$</span>z, paramDF<span class="op">$</span>kk)</span></code></pre></div>
 </div>
 <div id="tktd-individual-tolerance-type-it" class="section level2">
 <h2>TKTD, Individual Tolerance type IT</h2>
@@ -365,14 +356,7 @@ Finish loading setup script for JuliaCall.</code></pre>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>  <span class="dt">hb =</span> <span class="kw">rbeta</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">10</span>),</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>  <span class="dt">alpha =</span> <span class="kw">rbeta</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">10</span>),</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a>  <span class="dt">beta =</span> <span class="kw">rbeta</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">10</span>))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a>mcmc_runIT =<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(paramDF),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a>                    <span class="cf">function</span>(i){</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a>                      <span class="kw">runIT</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a>                            paramDF<span class="op">$</span>kd[i],</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true"></a>                            paramDF<span class="op">$</span>hb[i],</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true"></a>                            paramDF<span class="op">$</span>alpha[i],</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true"></a>                            paramDF<span class="op">$</span>beta[i])</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true"></a>                    })</span></code></pre></div>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a>mcmc_runIT =<span class="st"> </span><span class="kw">runIT_MCMC</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), paramDF<span class="op">$</span>kd, paramDF<span class="op">$</span>hb, paramDF<span class="op">$</span>alpha, paramDF<span class="op">$</span>beta)</span></code></pre></div>
 </div>
 </div>
 <div id="comparison-with-pacakge-desolve" class="section level1">
@@ -416,8 +400,8 @@ Finish loading setup script for JuliaCall.</code></pre>
 <h3>Plot both</h3>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>listParameters =<span class="st"> </span><span class="kw">list</span>(<span class="dt">kd =</span> <span class="fl">0.5</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>testR_runTK =<span class="st"> </span><span class="kw">deSolve_TK</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), <span class="kw">list</span>(<span class="dt">kd=</span><span class="fl">0.5</span>))</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a><span class="kw">plot</span>(single_runTK<span class="op">$</span>time, single_runTK<span class="op">$</span>TK, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">lwd =</span> <span class="dv">3</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a><span class="kw">lines</span>(testR_runTK<span class="op">$</span>time, testR_runTK<span class="op">$</span>TK, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a><span class="kw">plot</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), single_runTK<span class="op">$</span>TK, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">lwd =</span> <span class="dv">3</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a><span class="kw">lines</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), testR_runTK<span class="op">$</span>TK, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
 </div>
 <div id="test-speed" class="section level3">
 <h3>Test speed</h3>
